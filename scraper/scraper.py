@@ -10,17 +10,19 @@ def get_citations_needed_count(URL):
     return len(citations)
 
 def get_citations_needed_report(URL):
-    URL= 'https://en.wikipedia.org/wiki/History_of_Mexico'
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, 'html.parser')
     citations = soup.find_all('sup', class_='noprint Inline-Template Template-Fact')
-    with open ('citations_report.txt','w') as file:
-        for citation in citations:
-            paragraph = citation.find_parent("p").text.strip()
-            file.write(f"{paragraph}\n")
-            file.write("\n")
-            file.write("\n")
-
+    
+    report = ""
+    for citation in citations:
+        paragraph = citation.find_parent("p").text.strip()
+        report += f"{paragraph}\n\n"
+    
+    with open('citations_report.txt', 'w') as file:
+        file.write(report)
+    
+    return report
                    
 print("citations count =", get_citations_needed_count(URL))
 get_citations_needed_report(URL)
